@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity(), FragmentContract {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction().run {
-                val fragment = ContactsListFragment.newInstance()
+                val fragment = ContactsListFragment()
                 add(R.id.activity_frame_layout, fragment, ContactsListFragment.FRAGMENT_LIST_TAG)
                 commit()
             }
@@ -33,12 +33,4 @@ class MainActivity : AppCompatActivity(), FragmentContract {
         }
     }
 
-    override fun fromDetailsToList(contact: Contact) {
-        supportFragmentManager.popBackStack()
-        supportFragmentManager.beginTransaction().run {
-            val fragment = ContactsListFragment.newInstance(contact)
-            replace(R.id.activity_frame_layout, fragment, ContactsListFragment.FRAGMENT_LIST_TAG)
-            commit()
-        }
-    }
 }

@@ -42,16 +42,15 @@ class ContactDetailsFragment : Fragment(R.layout.fragment_contact_details) {
             firstNameEt.setText(contact.firstName)
             lastNameEt.setText(contact.lastName)
             numberEt.setText(contact.number)
+            detailsImageView.load(contact.imageUrl) {
+                crossfade(200)
+                transformations(RoundedCornersTransformation(15F))
+            }
             saveBtn.setOnClickListener {
                 contact.firstName = firstNameEt.text.toString()
                 contact.lastName = lastNameEt.text.toString()
                 contact.number = numberEt.text.toString()
-                contract?.fromDetailsToList(contact)
-            }
-            detailsImageView.load(contact.imageUrl) {
-                crossfade(200)
-                placeholder(R.drawable.ic_contact_holder)
-                transformations(RoundedCornersTransformation(15F))
+                requireActivity().onBackPressed()
             }
         }
     }

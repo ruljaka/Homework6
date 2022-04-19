@@ -11,50 +11,54 @@ import coil.transform.CircleCropTransformation
 import com.ruslangrigoriev.homework6.databinding.ItemContactBinding
 import java.util.*
 
-class ContactListAdapter(private val onItemClicked: (contact: Contact) -> Unit) :
+class ContactListAdapter(
+    private val onItemClicked: (contact: Contact) -> Unit,
+    private val onItemLongClicked: (contact: Contact) -> Boolean,
+) :
     ListAdapter<Contact, ContactListAdapter.ViewHolder>(ContactDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_contact, parent, false)
-        return ViewHolder(view, onItemClicked)
+        return ViewHolder(view, onItemClicked, onItemLongClicked)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    fun filter(query: String?, initialList: List<Contact>) {
+    fun filter(query: String?, initialList: MutableList<Contact>) {
         if (query.isNullOrEmpty()) {
             submitList(initialList)
         } else {
-            val filteredList = mutableListOf<Contact>()
-            val text = query.toString().trim().lowercase(Locale.getDefault())
-            initialList.forEach {
-                if (it.firstName.lowercase(Locale.ROOT).contains(text)
-                    || it.lastName.lowercase(Locale.ROOT).contains(text)
-                ) {
-                    filteredList.add(it)
-                }
-            }
+            val textQuery = query.toString().lowercase(Locale.getDefault()).trim()
+            val filteredList = initialList.filter {
+                it.firstName.lowercase(Locale.getDefault()).contains(textQuery)
+                        || it.lastName.lowercase(Locale.getDefault()).contains(textQuery)
+            }.toMutableList()
             submitList(filteredList)
         }
     }
 
     class ViewHolder(
         private val view: View,
-        private val onItemClicked: (contact: Contact) -> Unit
+        private val onItemClicked: (contact: Contact) -> Unit,
+        private val onItemLongClicked: (contact: Contact) -> Boolean,
     ) : RecyclerView.ViewHolder(view) {
 
         fun bind(contact: Contact) {
             val binding = ItemContactBinding.bind(view)
             with(binding) {
-                fullnameTextView.text = "${contact.firstName} ${contact.lastName}"
+                fullNameTextView.text = "${contact.firstName} ${contact.lastName}"
                 imageView.load(contact.imageUrl) {
-                    placeholder(R.drawable.ic_contact_holder)
+                    placeholder(R.drawable.ic_placeholder)
+                    error(R.drawable.ic_placeholder)
                     transformations(CircleCropTransformation())
                 }
                 root.setOnClickListener {
                     onItemClicked(contact)
+                }
+                root.setOnLongClickListener {
+                    onItemLongClicked(contact)
                 }
             }
         }

@@ -5,7 +5,7 @@ import com.github.javafaker.Faker
 class ContactsService {
 
     private val faker = Faker.instance()
-    val contacts: List<Contact> = (1..100).map {
+    val contacts: MutableList<Contact> = (1..150).map {
         Contact(
             id = it,
             firstName = faker.name().firstName(),
@@ -13,5 +13,9 @@ class ContactsService {
             number = faker.phoneNumber().cellPhone(),
             imageUrl = "https://picsum.photos/id/$it/400/600"
         )
+    }.toMutableList()
+
+    fun deleteContact(contact: Contact) {
+        contacts.remove(contact)
     }
 }
