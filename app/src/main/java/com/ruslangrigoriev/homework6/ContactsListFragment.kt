@@ -42,6 +42,7 @@ class ContactsListFragment : Fragment(R.layout.fragment_contacts_list) {
             adapter.submitList(contactsList)
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    contactsList?.let { adapter.filter(query, it) }
                     return false
                 }
 

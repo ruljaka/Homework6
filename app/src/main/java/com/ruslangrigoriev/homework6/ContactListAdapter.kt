@@ -34,7 +34,7 @@ class ContactListAdapter(
             val filteredList = initialList.filter {
                 it.firstName.lowercase(Locale.getDefault()).contains(textQuery)
                         || it.lastName.lowercase(Locale.getDefault()).contains(textQuery)
-            }.toMutableList()
+            }
             submitList(filteredList)
         }
     }
@@ -48,7 +48,7 @@ class ContactListAdapter(
         fun bind(contact: Contact) {
             val binding = ItemContactBinding.bind(view)
             with(binding) {
-                fullNameTextView.text = "${contact.firstName} ${contact.lastName}"
+                fullNameTextView.text = contact.toString()
                 imageView.load(contact.imageUrl) {
                     placeholder(R.drawable.ic_placeholder)
                     error(R.drawable.ic_placeholder)
